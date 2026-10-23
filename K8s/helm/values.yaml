@@ -32,8 +32,12 @@ ocCreateRoute: false
 
 cart: {}
 
-catalogue: {}
-
+catalogue:
+  image:
+    repository: pharmakarios1
+    tag: metrics-test
+    pullPolicy: Always
+    
 dispatch: {}
 
 mongodb: {}

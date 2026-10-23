@@ -14,6 +14,45 @@ const express = require('express');
 const pino = require('pino');
 const expPino = require('express-pino-logger');
 
+const client = require('prom-client');
+
+const register = new client.Registry();
+
+register.setDefaultLabels({
+    service: 'catalogue'
+});
+
+client.collectDefaultMetrics({
+    register,
+    prefix: 'nodejs_'
+});
+
+const httpRequestsTotal = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests received',
+    labelNames: ['method', 'route', 'status_code'],
+    registers: [register]
+});
+
+const httpRequestDurationSeconds = new client.Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'HTTP request duration in seconds',
+    labelNames: ['method', 'route', 'status_code'],
+    buckets: [0.01, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
+    registers: [register]
+});
+
+
+
+
+
+
+
+
+
+
+
+
 const logger = pino({
     level: 'info',
     prettyPrint: false,
@@ -31,6 +70,44 @@ var mongoConnected = false;
 const app = express();
 
 app.use(expLogger);
+
+app.use((req, res, next) => {
+    // Do not count Prometheus scrapes as application requests.
+    if (req.path === '/metrics') {
+        return next();
+    }
+
+    const start = process.hrtime();
+
+    res.on('finish', () => {
+        const elapsed = process.hrtime(start);
+        const durationSeconds = elapsed[0] + elapsed[1] / 1e9;
+
+        // Use the route template rather than raw URLs to avoid
+        // creating a separate metric label for every product SKU.
+        const route = req.route ? req.route.path : req.path;
+
+        const labels = {
+            method: req.method,
+            route,
+            status_code: String(res.statusCode)
+        };
+
+        httpRequestsTotal.inc(labels);
+        httpRequestDurationSeconds.observe(labels, durationSeconds);
+    });
+
+    next();
+});
+
+
+
+
+
+
+
+
+
 
 app.use((req, res, next) => {
     res.set('Timing-Allow-Origin', '*');
@@ -62,6 +139,12 @@ app.get('/health', (req, res) => {
     };
     res.json(stat);
 });
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
+
+
 
 // all products
 app.get('/products', (req, res) => {

@@ -19,8 +19,8 @@ spec:
       {{ end }}
       containers:
       - name: catalogue
-        image: {{ .Values.image.repo }}/rs-catalogue:{{ .Values.image.version }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: {{ .Values.catalogue.image.repository | default .Values.image.repo }}/rs-catalogue:{{ .Values.catalogue.image.tag | default .Values.image.version }}
+        imagePullPolicy: {{ .Values.catalogue.image.pullPolicy | default .Values.image.pullPolicy }}
         env:
          
         ports:
