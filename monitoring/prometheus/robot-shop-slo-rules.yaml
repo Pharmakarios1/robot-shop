@@ -1,0 +1,48 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: robot-shop-health-rules
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: robot-shop-deployment-health
+      rules:
+        - alert: RobotShopDeploymentReplicasUnavailable
+          expr: |
+            kube_deployment_spec_replicas{
+              namespace="robot-shop"
+            }
+            >
+            kube_deployment_status_replicas_available{
+              namespace="robot-shop"
+            }
+          for: 5m
+          labels:
+            severity: warning
+            service: robot-shop
+          annotations:
+            summary: "Robot Shop deployment has unavailable replicas"
+            description: >-
+              Deployment {{ $labels.deployment }} has fewer available
+              replicas than desired for more than 5 minutes.
+
+        - alert: RobotShopDeploymentHasNoAvailableReplicas
+          expr: |
+            kube_deployment_spec_replicas{
+              namespace="robot-shop"
+            } > 0
+            and
+            kube_deployment_status_replicas_available{
+              namespace="robot-shop"
+            } == 0
+          for: 2m
+          labels:
+            severity: critical
+            service: robot-shop
+          annotations:
+            summary: "Robot Shop deployment has no available replicas"
+            description: >-
+              Deployment {{ $labels.deployment }} has desired replicas
+              but none are available for more than 2 minutes.

@@ -1,0 +1,88 @@
+{
+  "uid": "robot-shop-health",
+  "title": "Robot Shop - Reliability Overview",
+  "tags": ["robot-shop", "reliability", "kubernetes"],
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Desired Replicas",
+      "type": "stat",
+      "gridPos": {"h": 5, "w": 6, "x": 0, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_deployment_spec_replicas{namespace=\"robot-shop\"})",
+          "legendFormat": "Desired",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Available Replicas",
+      "type": "stat",
+      "gridPos": {"h": 5, "w": 6, "x": 6, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_deployment_status_replicas_available{namespace=\"robot-shop\"})",
+          "legendFormat": "Available",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Unavailable Deployment Replicas",
+      "type": "stat",
+      "gridPos": {"h": 5, "w": 6, "x": 12, "y": 0},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum(kube_deployment_spec_replicas{namespace=\"robot-shop\"}) - sum(kube_deployment_status_replicas_available{namespace=\"robot-shop\"})",
+          "legendFormat": "Unavailable",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Robot Shop Pods by Phase",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (phase) (kube_pod_status_phase{namespace=\"robot-shop\"})",
+          "legendFormat": "{{phase}}"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Available Replicas by Deployment",
+      "type": "timeseries",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 5},
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "kube_deployment_status_replicas_available{namespace=\"robot-shop\"}",
+          "legendFormat": "{{deployment}}"
+        }
+      ]
+    }
+  ]
+}
