@@ -42,6 +42,7 @@ This project focuses on deploying **Stan's Robot Shop** to Kubernetes and learni
 The screenshot shows 12 desired replicas, 12 available replicas, and 0 unavailable deployments at the time it was captured. The dashboard also includes pod phase and per-deployment replica panels.
 
 ![Grafana Robot Shop Reliability Overview](docs/images/grafana-reliability-overview.png)
+![Grafana Robot Shop Red Metrics](docs/images/grafana-red-metrics.png)
 
 ### Prometheus — Catalogue Metrics Target
 
