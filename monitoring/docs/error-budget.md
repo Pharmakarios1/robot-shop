@@ -113,8 +113,3 @@ Before calculating the actual error budget, confirm that Prometheus has the requ
 - [ ] Investigate rapid consumption or exhaustion.
 - [ ] Document the findings and supporting Grafana evidence.
 
-## 9. Important Note
-
-The values in this document are proposed learning targets and examples. No claim is made that the Robot Shop application currently meets its SLO or has a particular amount of remaining error budget.
-
-Actual results require valid measurements over the defined window.
