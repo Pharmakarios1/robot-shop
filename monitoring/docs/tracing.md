@@ -42,10 +42,4 @@ The proposed Tempo values are in `monitoring/tracing/tempo-values.yaml`. They we
 - [ ] Robot Shop generates trace data.
 - [ ] Grafana can retrieve and display a real trace.
 
-## Current status
-**Planned; end-to-end tracing has not been verified.** The collector, application instrumentation, Grafana data source, and trace queries still require implementation and validation.
 
-## References
-- https://opentelemetry.io/docs/
-- https://grafana.com/docs/tempo/latest/
-- https://grafana.com/docs/grafana/latest/datasources/
