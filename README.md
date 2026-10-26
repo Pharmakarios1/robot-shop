@@ -61,11 +61,6 @@ The screenshot shows the Catalogue ServiceMonitor target scraping `http://<catal
 - **Reliability signals:** desired versus available replicas and pod phases provide a starting point for detecting degraded deployments.
 - **Troubleshooting:** storage provisioning, resource limits, pod capacity, and scheduling events can all affect whether workloads become healthy.
 
-## Current Progress
-
-**Completed so far:** Robot Shop deployment work, monitoring stack setup, the initial reliability dashboard, Catalogue metrics verification, and a successful Prometheus scrape of the Catalogue metrics endpoint.
-
-**Still to complete:** centralized logging with Fluent Bit and Loki, distributed tracing with OpenTelemetry and Jaeger, a documented availability SLO and error-budget policy, Slack alerting with a linked runbook, and an incident drill with a blameless postmortem. The dashboard and monitoring configuration should also be exported and committed to the repository as code where applicable.
 
 ## Useful Commands
 
